@@ -50,15 +50,28 @@ class PrepaidController extends Controller
         prepaidValidationForm();
         //------------------------
 
-        $prepaid = new Prepaid;
-        $prepaid->value = $request->get('value');
-        $prepaid->mobile_number = $request->get('mobile_number');
-        $prepaid->price = $request->get('value');
-        $prepaid->save();
+        // $prepaid = new Prepaid;
+        // $prepaid->value = $request->get('value');
+        // $prepaid->mobile_number = $request->get('mobile_number');
+        // $prepaid->price = $request->get('value');
+        // $prepaid->save();
+
+
+    try{    
+
+        DB::beginTransaction();
+
+        $prepaid = Prepaid::create([
+
+            'value' => $request->get('value'),
+            'mobile_number' => $request->get('mobile_number'),
+            'price' => $request->get('value')
+
+        ]);
 
 
 
-        if($prepaid->save()){ 
+        // if($prepaid->save()){ 
             
             $order = new Order;
             $order->user_id = \Auth::user()->id;
@@ -73,12 +86,20 @@ class PrepaidController extends Controller
             //-------------------------
 
             $order->prepaids()->attach($prepaid->id);
+
+            DB::commit();
             
             return redirect()->route('success.index',['id' => $order->id]);
             
-            }
+            // }
+
+
     
-          
+        }catch(\Exception $e){
+            DB::rollback();
+    
+            return $e->getMessage(); 
+        }	
             
 
 

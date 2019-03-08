@@ -24,6 +24,6 @@ class Prepaid extends Model
 
     }
 
-
+    protected $fillable = ['value','mobile_number','price'];
 
 }

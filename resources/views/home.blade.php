@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">Order History</div>
 
@@ -46,7 +46,7 @@
                             <tr>
                                 <td>{{$data->created_at}}</td>
                                 <td>{{$data->invoice_number}}</td>  
-                                <td>
+                                <td style="width: 300px;">
                              
                                     @foreach($data->prepaids as $prepaid)
                                             {{$prepaid->price.' For '.$prepaid->mobile_number}} 
@@ -62,6 +62,14 @@
                                 @if($data->status =='UNPAID')
                                 <form method="post" action="{{route('success.storepayment',['id'=>$data->id])}}">
                                 {{csrf_field()}}
+                                @foreach($data->prepaids as $prepaid)
+                                    <input type="hidden" value="{{$prepaid->mobile_number}}" name="mobile_number">
+                                @endforeach 
+
+                                @foreach($data->products as $product)    
+                                    <input type="hidden" value="{{$product->shipping_address}}" name="shipping_address">
+                                @endforeach
+
                                     <button type="submit" class="btn btn-warning btn-sm">Pay now</button>
                                 </form>
                                 @elseif($data->status == 'FAILED')

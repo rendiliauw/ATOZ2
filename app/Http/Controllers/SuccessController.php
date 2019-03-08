@@ -57,7 +57,7 @@ class SuccessController extends Controller
 
             if($paymentproses->invoice_number == $invoicepayment){ 
         
-                    if($mobilenumber){
+                    if($mobilenumber || !$shippingaddress){
         
                         if($paymentproses->created_at >= $time1 && $paymentproses->created_at <= $time2 ){
                               
@@ -84,7 +84,7 @@ class SuccessController extends Controller
         
                         }
         
-                    }elseif($shippingaddress){
+                    }else{
         
                             $paymentproses->status = 'SUCCESS';
                             $paymentproses->shipping_code = shippingCode();
@@ -92,11 +92,7 @@ class SuccessController extends Controller
         
                             return redirect()->route('home')->with('status','Sukses, Barang anda akan segera kami antar');  
         
-                    }else{
-
-                        return 'masih salah';
-                    }  
-        
+                    }
         
         
             }else{
@@ -128,7 +124,7 @@ class SuccessController extends Controller
     }
 
     public function restore($id){
-        $order = Order::withTrashed()->findOrFail($id);
+        $order = Order::trashedbin($id);
         
         if($order->trashed()){
             $order->restore();
@@ -139,7 +135,7 @@ class SuccessController extends Controller
     }
 
     public function deletePermanent($id){
-        $order = Order::withTrashed()->findOrFail($id);
+        $order = Order::deletebin($id);
       
         if(!$order->trashed()){
           return redirect()->route('success.trash')->with('status', 'order is not in trash!')->with('status_type', 'alert');

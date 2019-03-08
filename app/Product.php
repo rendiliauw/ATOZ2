@@ -32,5 +32,7 @@ class Product extends Model
         $this->attributes['shipping_address'] = ucfirst($value);
     }
 
+    protected $fillable = ['title_product','shipping_address','price'];
+
 
 }

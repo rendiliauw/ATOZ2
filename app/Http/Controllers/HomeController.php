@@ -32,11 +32,11 @@ class HomeController extends Controller
 
         if($keyword){
 
-            $show= Order::with('user')->with('prepaids')->with('products')->where('user_id',\Auth::user()->id)->where('invoice_number','LIKE',"%$keyword%")->orderBy('created_at','DESC')->paginate(20);
+            $show= Order::keywordorder($keyword)->paginate(20);
 
         }else{
 
-            $show= Order::with('user')->with('prepaids')->with('products')->where('user_id',\Auth::user()->id)->orderBy('created_at','DESC')->paginate(20);
+            $show= Order::history()->paginate(20);
            
             }
         
@@ -49,7 +49,7 @@ class HomeController extends Controller
     public function delete($id){
 
 
-        $deleteorder = Order::findOrFail($id);
+        $deleteorder = Order::deletehistory($id);
         $deleteorder->delete();
 
 

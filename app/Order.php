@@ -18,6 +18,28 @@ class Order extends Model
     // public function products(){
     //     return $this->belongsToMany('App\Product');
     // }
+
+    public function scopeHistory ($query){
+        return $query->where('user_id',\Auth::user()->id)->orderBy('created_at','DESC');
+    }
+
+    public function scopeKeywordorder ($query, $value){
+        return $query->where('user_id',\Auth::user()->id)->where('invoice_number','LIKE',"%$value%")->orderBy('created_at','DESC');
+    }
+
+    public function scopeDeletehistory ($query, $value){
+        return $query->findOrFail($value);
+    }
+
+    public function scopeTrashedbin ($query, $value){
+        return $query->withTrashed()->findOrFail($value);
+    }
+
+    public function scopeDeletebin ($query, $value){
+        return $query->withTrashed()->findOrFail($value);
+    }
+
+
     
     public function user(){
         return $this->belongsTo('App\User');

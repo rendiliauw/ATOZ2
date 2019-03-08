@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Order;
 use App\Jobs\CancelOrderJob;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -45,13 +46,28 @@ class ProductController extends Controller
         //----------------------
 
 
-        $product = new Product;
-        $product->title_product = $request->get('title_product');
-        $product->shipping_address = $request->get('shipping_address');
-        $product->price = $request->get('price');
-        $product->save();
+        // $product = new Product;
+        // $product->title_product = $request->get('title_product');
+        // $product->shipping_address = $request->get('shipping_address');
+        // $product->price = $request->get('price');
+        // $product->save();
 
-        if($product->save()){
+
+        try{
+
+            
+        DB::beginTransaction();
+        
+        $product = Product::create([
+
+            'title_product' => $request->get('title_product'),
+            'shipping_address' => $request->get('shipping_address'),
+            'price' => $request->get('price')
+
+        ]);
+
+
+        // if($product->save()){
 
             $orderProduct = new Order;
             $orderProduct->user_id = \Auth::user()->id;
@@ -67,12 +83,19 @@ class ProductController extends Controller
             
             $orderProduct->products()->attach($product->id);
             
-              
-            return redirect()->route('success.index',['id' => $orderProduct->id]);
-
-          
             
+            
+            DB::commit();
+            
+            
+            return redirect()->route('success.index',['id' => $orderProduct->id]);
       
+        }catch(\Exception $e){
+
+            
+            DB::rollback();
+            
+            return $e->getMessage();
 
         }
 

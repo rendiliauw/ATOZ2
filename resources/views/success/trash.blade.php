@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    <div class="row">
+                    {{--  <div class="row">
                         <div class="col-sm-6">
                             <form action="{{route('home')}}" class="form-inline mb-2">
                                 <input class="form-control mr-sm-2" type="search" name="keyword" value="{{Request::get('keyword')}}" placeholder="Search" aria-label="Search">
@@ -24,10 +24,10 @@
                         <div class="col-sm-2">
                             
                         </div>
-                        {{--  <div class="col-sm-2">
+                        <div class="col-sm-2">
                             <a name="" id="" class="btn btn-secondary" href="{{route('success.trash')}}" role="button">Trash</a>
-                        </div>  --}}
-                    </div>
+                        </div>
+                    </div>  --}}
 
                     
                         <table class="table table-hover">
